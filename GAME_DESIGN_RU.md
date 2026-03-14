@@ -92,6 +92,8 @@ OfflineIncome = IncomePerSecond \cdot OfflineSeconds \cdot 0.65
 
 > Сцена `Assets/Scenes/Main.unity` уже готова к запуску: при старте `SceneBootstrapper` автоматически создаёт все менеджеры, Canvas, кнопки, индикаторы и базовую панель магазина без ручной настройки в инспекторе.
 
+> Для WebGL-текста используется стандартный `UnityEngine.UI.Text` + встроенный шрифт `Arial.ttf`, поэтому в билде отображаются надписи на кнопках и счётчиках без установки TMP Essentials.
+
 ```text
 Assets/
   Scenes/

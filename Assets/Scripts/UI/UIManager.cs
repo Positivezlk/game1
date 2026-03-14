@@ -1,5 +1,4 @@
 using System.Text;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using IdleStarforge.Managers;
@@ -10,12 +9,12 @@ namespace IdleStarforge.UI
     public class UIManager : MonoBehaviour
     {
         [Header("Основной UI")]
-        [SerializeField] private TMP_Text creditsText;
-        [SerializeField] private TMP_Text oreText;
-        [SerializeField] private TMP_Text scienceText;
-        [SerializeField] private TMP_Text tierText;
-        [SerializeField] private TMP_Text prestigeText;
-        [SerializeField] private TMP_Text offlineText;
+        [SerializeField] private Text creditsText;
+        [SerializeField] private Text oreText;
+        [SerializeField] private Text scienceText;
+        [SerializeField] private Text tierText;
+        [SerializeField] private Text prestigeText;
+        [SerializeField] private Text offlineText;
         [SerializeField] private Slider progressSlider;
 
         [Header("Кнопки")]
@@ -29,12 +28,12 @@ namespace IdleStarforge.UI
         [SerializeField] private OfflineIncome offlineIncome;
 
         public void Configure(
-            TMP_Text credits,
-            TMP_Text ore,
-            TMP_Text science,
-            TMP_Text tier,
-            TMP_Text prestige,
-            TMP_Text offline,
+            Text credits,
+            Text ore,
+            Text science,
+            Text tier,
+            Text prestige,
+            Text offline,
             Slider slider,
             Button click,
             Button ad,

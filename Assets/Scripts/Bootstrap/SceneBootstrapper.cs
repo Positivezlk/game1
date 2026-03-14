@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -38,17 +37,17 @@ namespace IdleStarforge.Bootstrap
             var canvas = CreateCanvas();
             var uiManager = canvas.gameObject.AddComponent<UIManager>();
 
-            TMP_Text credits = CreateLabel(canvas.transform, "CreditsText", new Vector2(20, -20), "Кредиты: 0", 34);
-            TMP_Text ore = CreateLabel(canvas.transform, "OreText", new Vector2(20, -60), "Руда: 0", 30);
-            TMP_Text science = CreateLabel(canvas.transform, "ScienceText", new Vector2(20, -95), "Наука: 0", 30);
-            TMP_Text tier = CreateLabel(canvas.transform, "TierText", new Vector2(20, -130), "Этап: 1/5", 28);
-            TMP_Text prestige = CreateLabel(canvas.transform, "PrestigeText", new Vector2(20, -165), "Престиж: 0", 28);
-            TMP_Text offline = CreateLabel(canvas.transform, "OfflineText", new Vector2(20, -205), "Оффлайн доход: 0", 24);
+            Text credits = CreateLabel(canvas.transform, "CreditsText", new Vector2(20, -20), "Кредиты: 0", 28);
+            Text ore = CreateLabel(canvas.transform, "OreText", new Vector2(20, -58), "Руда: 0", 24);
+            Text science = CreateLabel(canvas.transform, "ScienceText", new Vector2(20, -90), "Наука: 0", 24);
+            Text tier = CreateLabel(canvas.transform, "TierText", new Vector2(20, -122), "Этап: 1/5", 22);
+            Text prestige = CreateLabel(canvas.transform, "PrestigeText", new Vector2(20, -152), "Престиж: 0", 22);
+            Text offline = CreateLabel(canvas.transform, "OfflineText", new Vector2(20, -185), "Оффлайн доход: 0", 20);
 
-            var progress = CreateSlider(canvas.transform, "ProgressSlider", new Vector2(20, -255), new Vector2(450, 24));
-            var clickButton = CreateButton(canvas.transform, "ClickButton", new Vector2(20, -300), new Vector2(250, 70), "Добыть");
-            var adButton = CreateButton(canvas.transform, "AdButton", new Vector2(290, -300), new Vector2(250, 70), "Реклама +120 сек");
-            var prestigeButton = CreateButton(canvas.transform, "PrestigeButton", new Vector2(560, -300), new Vector2(250, 70), "Престиж");
+            var progress = CreateSlider(canvas.transform, "ProgressSlider", new Vector2(20, -240), new Vector2(450, 24));
+            var clickButton = CreateButton(canvas.transform, "ClickButton", new Vector2(20, -280), new Vector2(250, 70), "Добыть");
+            var adButton = CreateButton(canvas.transform, "AdButton", new Vector2(290, -280), new Vector2(250, 70), "Реклама +120 сек");
+            var prestigeButton = CreateButton(canvas.transform, "PrestigeButton", new Vector2(560, -280), new Vector2(250, 70), "Престиж");
 
             CreateShopPlaceholder(canvas.transform);
 
@@ -70,6 +69,11 @@ namespace IdleStarforge.Bootstrap
             gameManager.Configure(saveSystem, offlineIncome, uiManager, randomBonusSystem, achievementSystem);
         }
 
+        private static Font GetDefaultFont()
+        {
+            return Resources.GetBuiltinResource<Font>("Arial.ttf");
+        }
+
         private static void EnsureMainCamera()
         {
             if (Camera.main != null) return;
@@ -79,6 +83,8 @@ namespace IdleStarforge.Bootstrap
             var cam = camera.AddComponent<Camera>();
             cam.clearFlags = CameraClearFlags.SolidColor;
             cam.backgroundColor = new Color(0.05f, 0.08f, 0.12f);
+            cam.orthographic = true;
+            cam.orthographicSize = 5f;
         }
 
         private static void EnsureEventSystem()
@@ -95,12 +101,17 @@ namespace IdleStarforge.Bootstrap
             var canvasObject = new GameObject("MainCanvas");
             var canvas = canvasObject.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvasObject.AddComponent<CanvasScaler>();
+
+            var scaler = canvasObject.AddComponent<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(1280, 720);
+            scaler.matchWidthOrHeight = 0.5f;
+
             canvasObject.AddComponent<GraphicRaycaster>();
             return canvas;
         }
 
-        private static TMP_Text CreateLabel(Transform parent, string name, Vector2 anchoredPos, string text, int fontSize)
+        private static Text CreateLabel(Transform parent, string name, Vector2 anchoredPos, string text, int fontSize)
         {
             var go = new GameObject(name);
             go.transform.SetParent(parent, false);
@@ -109,12 +120,16 @@ namespace IdleStarforge.Bootstrap
             rect.anchorMax = new Vector2(0, 1);
             rect.pivot = new Vector2(0, 1);
             rect.anchoredPosition = anchoredPos;
-            rect.sizeDelta = new Vector2(700, 32);
+            rect.sizeDelta = new Vector2(760, 34);
 
-            var label = go.AddComponent<TextMeshProUGUI>();
+            var label = go.AddComponent<Text>();
             label.text = text;
+            label.font = GetDefaultFont();
             label.fontSize = fontSize;
             label.color = Color.white;
+            label.alignment = TextAnchor.MiddleLeft;
+            label.horizontalOverflow = HorizontalWrapMode.Overflow;
+            label.verticalOverflow = VerticalWrapMode.Overflow;
             return label;
         }
 
@@ -129,8 +144,9 @@ namespace IdleStarforge.Bootstrap
             rect.anchoredPosition = anchoredPos;
             rect.sizeDelta = size;
 
-            var background = new GameObject("Background").AddComponent<Image>();
-            background.transform.SetParent(go.transform, false);
+            var backgroundObj = new GameObject("Background");
+            backgroundObj.transform.SetParent(go.transform, false);
+            var background = backgroundObj.AddComponent<Image>();
             var bgRect = background.GetComponent<RectTransform>();
             bgRect.anchorMin = Vector2.zero;
             bgRect.anchorMax = Vector2.one;
@@ -138,15 +154,17 @@ namespace IdleStarforge.Bootstrap
             bgRect.offsetMax = Vector2.zero;
             background.color = new Color(0.15f, 0.15f, 0.15f);
 
-            var fillArea = new GameObject("Fill Area").AddComponent<RectTransform>();
-            fillArea.transform.SetParent(go.transform, false);
+            var fillAreaObj = new GameObject("Fill Area");
+            fillAreaObj.transform.SetParent(go.transform, false);
+            var fillArea = fillAreaObj.AddComponent<RectTransform>();
             fillArea.anchorMin = Vector2.zero;
             fillArea.anchorMax = Vector2.one;
             fillArea.offsetMin = new Vector2(5, 5);
             fillArea.offsetMax = new Vector2(-5, -5);
 
-            var fill = new GameObject("Fill").AddComponent<Image>();
-            fill.transform.SetParent(fillArea, false);
+            var fillObj = new GameObject("Fill");
+            fillObj.transform.SetParent(fillArea, false);
+            var fill = fillObj.AddComponent<Image>();
             var fillRect = fill.GetComponent<RectTransform>();
             fillRect.anchorMin = Vector2.zero;
             fillRect.anchorMax = Vector2.one;
@@ -177,17 +195,20 @@ namespace IdleStarforge.Bootstrap
             image.color = new Color(0.2f, 0.3f, 0.45f);
             var button = go.AddComponent<Button>();
 
-            var label = new GameObject("Label").AddComponent<TextMeshProUGUI>();
-            label.transform.SetParent(go.transform, false);
-            label.alignment = TextAlignmentOptions.Center;
-            label.text = text;
-            label.fontSize = 28;
-            label.color = Color.white;
-            var labelRect = label.GetComponent<RectTransform>();
+            var labelObject = new GameObject("Label");
+            labelObject.transform.SetParent(go.transform, false);
+            var labelRect = labelObject.AddComponent<RectTransform>();
             labelRect.anchorMin = Vector2.zero;
             labelRect.anchorMax = Vector2.one;
             labelRect.offsetMin = Vector2.zero;
             labelRect.offsetMax = Vector2.zero;
+
+            var label = labelObject.AddComponent<Text>();
+            label.text = text;
+            label.font = GetDefaultFont();
+            label.fontSize = 26;
+            label.color = Color.white;
+            label.alignment = TextAnchor.MiddleCenter;
 
             return button;
         }
@@ -204,44 +225,46 @@ namespace IdleStarforge.Bootstrap
             rect.sizeDelta = new Vector2(430, 620);
 
             var image = panel.AddComponent<Image>();
-            image.color = new Color(0.08f, 0.1f, 0.18f, 0.85f);
+            image.color = new Color(0.08f, 0.1f, 0.18f, 0.9f);
 
-            var title = CreateLabel(panel.transform, "ShopTitle", new Vector2(16, -16), "Магазин апгрейдов", 32);
+            var title = CreateLabel(panel.transform, "ShopTitle", new Vector2(16, -16), "Магазин апгрейдов", 30);
             title.color = new Color(0.95f, 0.9f, 0.55f);
 
-            CreateLabel(panel.transform, "ShopHint", new Vector2(16, -60), "Подключите карточки апгрейдов к UpgradeSystem.Definitions", 22);
+            CreateLabel(panel.transform, "ShopHint", new Vector2(16, -56), "Подключите карточки апгрейдов к UpgradeSystem.Definitions", 18);
 
             var scrollRoot = new GameObject("ShopScroll");
             scrollRoot.transform.SetParent(panel.transform, false);
-            var scrollRect = scrollRoot.AddComponent<RectTransform>();
-            scrollRect.anchorMin = new Vector2(0, 0);
-            scrollRect.anchorMax = new Vector2(1, 1);
-            scrollRect.offsetMin = new Vector2(12, 12);
-            scrollRect.offsetMax = new Vector2(-12, -90);
+            var scrollRectTransform = scrollRoot.AddComponent<RectTransform>();
+            scrollRectTransform.anchorMin = new Vector2(0, 0);
+            scrollRectTransform.anchorMax = new Vector2(1, 1);
+            scrollRectTransform.offsetMin = new Vector2(12, 12);
+            scrollRectTransform.offsetMax = new Vector2(-12, -90);
 
             var scrollImage = scrollRoot.AddComponent<Image>();
             scrollImage.color = new Color(0f, 0f, 0f, 0.22f);
-            scrollRoot.AddComponent<Mask>().showMaskGraphic = false;
+            var mask = scrollRoot.AddComponent<Mask>();
+            mask.showMaskGraphic = false;
 
             var content = new GameObject("Content");
             content.transform.SetParent(scrollRoot.transform, false);
             var contentRect = content.AddComponent<RectTransform>();
             contentRect.anchorMin = new Vector2(0, 1);
             contentRect.anchorMax = new Vector2(1, 1);
-            contentRect.pivot = new Vector2(0.5f, 1);
+            contentRect.pivot = new Vector2(0.5f, 1f);
             contentRect.sizeDelta = new Vector2(0, 900);
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 12; i++)
             {
-                var item = CreateLabel(content.transform, $"UpgradeStub{i + 1}", new Vector2(16, -16 - (i * 78)), $"Апгрейд {i + 1}: +доход", 24);
+                var item = CreateLabel(content.transform, $"UpgradeStub{i + 1}", new Vector2(12, -12 - (i * 70)), $"Апгрейд {i + 1}: +доход", 20);
                 item.color = new Color(0.85f, 0.9f, 1f);
             }
 
-            var sv = scrollRoot.AddComponent<ScrollRect>();
-            sv.viewport = scrollRect;
-            sv.content = contentRect;
-            sv.horizontal = false;
-            sv.vertical = true;
+            var scroll = scrollRoot.AddComponent<ScrollRect>();
+            scroll.viewport = scrollRectTransform;
+            scroll.content = contentRect;
+            scroll.horizontal = false;
+            scroll.vertical = true;
+            scroll.scrollSensitivity = 25f;
         }
     }
 }
