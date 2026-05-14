@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!129 &1
+PlayerSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 26
+  productGUID: 22222222222222222222222222222222
+  AndroidProfiler: 0
+  AndroidFilterTouchesWhenObscured: 0
+  AndroidEnableSustainedPerformanceMode: 0
+  defaultScreenOrientation: 4
+  targetDevice: 2
+  useOnDemandResources: 0
+  accelerometerFrequency: 60
+  companyName: RunnerStudio
+  productName: NeonDashYandex
+  defaultCursor: {fileID: 0}
+  cursorHotspot: {x: 0, y: 0}
+  m_SplashScreenBackgroundColor: {r: 0.05, g: 0.07, b: 0.1, a: 1}
+  m_SplashScreenShow: 0
+  m_SplashScreenLogoStyle: 1
+  m_SplashScreenDrawMode: 0
+  m_SplashScreenAnimation: 1
+  m_SplashScreenLogoAnimationZoom: 1
+  m_SplashScreenBackgroundAnimationZoom: 1
+  m_SplashScreenBlurBackground: 1
+  m_SplashScreenLogos: []
+  webGLMemorySize: 256
+  webGLExceptionSupport: 0
+  webGLNameFilesAsHashes: 0
+  webGLDataCaching: 1
+  webGLDebugSymbols: 0
+  webGLCompressionFormat: 1
+  webGLLinkerTarget: 1
+  webGLThreadsSupport: 0
+  webGLDecompressionFallback: 1
+  webGLPowerPreference: 2
+  webGLTemplate: PROJECT:YandexGames
+  WebGLUseEmbeddedResources: 0
+  WebGLAnalyzeBuildSize: 0
+  WebGLUseWasm: 1
+  WebGLEnableWebGPU: 0
+  WebGLEnableWebGL2: 1
+  WebGLWasmStreaming: 1
+  scriptingBackend: {}
+  il2cppCompilerConfiguration: {}
+  managedStrippingLevel: {}
+  incrementalIl2cppBuild: {}
+  allowUnsafeCode: 0
+  gcIncremental: 1
+  assemblyVersionValidation: 1
+  activeInputHandler: 0

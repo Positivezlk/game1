@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>{{{ PRODUCT_NAME }}}</title>
+  <script src="/sdk.js"></script>
+  <style>
+    html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #070912; touch-action: none; }
+    #unity-container { position: fixed; inset: 0; width: 100%; height: 100%; overflow: hidden; }
+    #unity-canvas { width: 100%; height: 100%; display: block; background: #070912; }
+    #unity-loading-bar { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(70vw, 420px); height: 14px; border: 1px solid #17d4ff; border-radius: 8px; overflow: hidden; }
+    #unity-progress-bar-full { width: 0%; height: 100%; background: linear-gradient(90deg, #17d4ff, #ff4fb8); }
+  </style>
+</head>
+<body>
+  <div id="unity-container">
+    <canvas id="unity-canvas" tabindex="-1"></canvas>
+    <div id="unity-loading-bar"><div id="unity-progress-bar-full"></div></div>
+  </div>
+  <script>
+    const canvas = document.querySelector('#unity-canvas');
+    const loadingBar = document.querySelector('#unity-loading-bar');
+    const progressBarFull = document.querySelector('#unity-progress-bar-full');
+    window.NeonDashYandex = window.NeonDashYandex || {};
+    window.addEventListener('wheel', function (event) { event.preventDefault(); }, { passive: false });
+    window.addEventListener('touchmove', function (event) { event.preventDefault(); }, { passive: false });
+    createUnityInstance(canvas, {
+      dataUrl: 'Build/{{{ DATA_FILENAME }}}',
+      frameworkUrl: 'Build/{{{ FRAMEWORK_FILENAME }}}',
+      codeUrl: 'Build/{{{ CODE_FILENAME }}}',
+#if MEMORY_FILENAME
+      memoryUrl: 'Build/{{{ MEMORY_FILENAME }}}',
+#endif
+#if SYMBOLS_FILENAME
+      symbolsUrl: 'Build/{{{ SYMBOLS_FILENAME }}}',
+#endif
+      streamingAssetsUrl: 'StreamingAssets',
+      companyName: '{{{ COMPANY_NAME }}}',
+      productName: '{{{ PRODUCT_NAME }}}',
+      productVersion: '{{{ PRODUCT_VERSION }}}'
+    }, function (progress) {
+      progressBarFull.style.width = (100 * progress) + '%';
+    }).then(function (unityInstance) {
+      window.NeonDashYandex.unityInstance = unityInstance;
+      loadingBar.style.display = 'none';
+    }).catch(function (message) {
+      alert(message);
+    });
+  </script>
+</body>
+</html>
